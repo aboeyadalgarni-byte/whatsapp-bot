@@ -5,9 +5,9 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 
 app.post("/whatsapp", (req, res) => {
-  const msg = req.body.Body?.toLowerCase() || "";
+  const msg = (req.body.Body || "").toLowerCase();
 
-  let reply = "ارسل: كامري أو ايفون 🚗📱";
+  let reply = "🚀 البوت شغال";
 
   if (msg.includes("كامري")) {
     reply = "🚗 أرخص كامري: 41500 ريال";
@@ -16,6 +16,8 @@ app.post("/whatsapp", (req, res) => {
   if (msg.includes("ايفون")) {
     reply = "📱 أرخص آيفون: 1700 ريال";
   }
+
+  res.type("text/xml");
 
   res.send(`
 <Response>
@@ -31,5 +33,5 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
+  console.log("Running");
 });
