@@ -6,22 +6,23 @@ const bot = new TelegramBot(token, { polling: true });
 
 const channel = '@harajpulse1';
 
+// رسالة عند تشغيل البوت
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, '🔥 بوت حراج شغال');
 });
 
-// إرسال فرصة كل دقيقة
+// إرسال رسالة للقناة كل دقيقة
 setInterval(() => {
 
   bot.sendMessage(channel, `
 🚨 فرصة جديدة من حراج
 
-🚗 كامري 2024 فل كامل
+كامري 2024 فل كامل
 
 💰 السعر: 89,000 ريال
 
 🔗 https://haraj.com.sa
-`);
+  `);
 
 }, 60000);
 
