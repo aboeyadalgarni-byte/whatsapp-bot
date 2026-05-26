@@ -1,37 +1,28 @@
-const express = require("express");
+const TelegramBot = require('node-telegram-bot-api');
 
-const app = express();
+const token = '8815356896:AAFzhaQIV9JRlVOIIPJGnCfQNqsIcE3Qn7U';
 
-app.use(express.urlencoded({ extended: false }));
+const bot = new TelegramBot(token, { polling: true });
 
-app.post("/whatsapp", (req, res) => {
-  const msg = (req.body.Body || "").toLowerCase();
+const channel = '@harajpulse1';
 
-  let reply = "🚀 البوت شغال";
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(msg.chat.id, '🔥 بوت حراج شغال');
+});
 
-  if (msg.includes("كامري")) {
-    reply = "🚗 أرخص كامري: 41500 ريال";
-  }
+// رسالة تجريبية كل دقيقة
+setInterval(() => {
 
-  if (msg.includes("ايفون")) {
-    reply = "📱 أرخص آيفون: 1700 ريال";
-  }
+  bot.sendMessage(channel, `
+🚨 فرصة جديدة من حراج
 
-  res.type("text/xml");
+كامري 2024 فل كامل
 
-  res.send(`
-<Response>
-<Message>${reply}</Message>
-</Response>
+💰 السعر: 89,000 ريال
+
+🔗 https://haraj.com.sa
 `);
-});
 
-app.get("/", (req, res) => {
-  res.send("WhatsApp Bot Running 🚀");
-});
+}, 60000);
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log("Running");
-});
+console.log('Telegram bot running 🚀');
