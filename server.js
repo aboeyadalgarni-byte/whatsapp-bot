@@ -1,47 +1,19 @@
-const TelegramBot = require('node-telegram-bot-api');
-const http = require('http');
+import "dotenv/config";
+import express from "express";
+import { handleWebhook, verifyWebhook } from "./src/whatsapp.js";
 
-// توكن البوت
-const token = '8815356896:AAFzhaQIV9JRlVOIIPJGnCfQNqsIcE3Qn7U';
+const app = express();
+app.use(express.json({ limit: "10mb" }));
 
-// تشغيل البوت
-const bot = new TelegramBot(token, {
-  polling: true
+app.get("/health", (_req, res) => {
+  res.json({ ok: true, service: "sawha", time: new Date().toISOString() });
 });
 
-// القناة
-const channel = '@harajpulse1';
-
-// أمر start
-bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, '🔥 البوت شغال بنجاح');
+app.get("/webhook", verifyWebhook);
+app.post("/webhook", (req, res) => {
+  res.sendStatus(200);
+  handleWebhook(req.body).catch((err) => console.error("[webhook]", err));
 });
 
-// إرسال رسالة للقناة كل دقيقة
-setInterval(() => {
-
-  const message = `
-🚨 فرصة جديدة من حراج
-
-🚗 كامري 2024 فل كامل
-
-💰 السعر: 89,000 ر.س
-
-🔗 https://haraj.com.sa
-`;
-
-  bot.sendMessage(channel, message);
-
-}, 60000);
-
-// سيرفر لـ Railway
-const PORT = process.env.PORT || 8080;
-
-http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end('Bot is running');
-}).listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
-});
-
-console.log('Telegram bot running 🚀');
+const port = Number(process.env.PORT || 8080);
+app.listen(port, () => console.log(`Sawha running on :${port}`));
