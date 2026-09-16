@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express from "express";
-import { handleWebhook, verifyWebhook } from "./src/whatsapp.js";
+import { handleWebhook, verifyWebhook } from "./whatsapp.js";
 
 const app = express();
 app.use(express.json({ limit: "10mb" }));
@@ -16,4 +16,4 @@ app.post("/webhook", (req, res) => {
 });
 
 const port = Number(process.env.PORT || 8080);
-app.listen(port, () => console.log(`Sawha running on :${port}`));
+app.listen(port, () => console.log(`سوّها running on :${port}`));
