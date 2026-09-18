@@ -51,8 +51,8 @@ app.get("/status", async (_req, res) => {
       { headers: { Authorization: "Bearer " + token } }
     );
     const body = await r.json().catch(() => ({}));
-    if (!r.ok) return res.status(502).json({ ok: false, meta_status: r.status, error: body?.error || body });
-    res.json({ ok: true, whatsapp: body });
+    if (!r.ok) return res.status(502).json({ ok: false, meta_status: r.status, error: body?.error?.message || "Meta rejected the request." });
+    res.json({ ok: true, connected: true, phone_number_id: phoneId, quality_rating: body?.quality_rating || null });
   } catch {
     res.status(502).json({ ok: false, error: "Meta Graph request failed." });
   }
