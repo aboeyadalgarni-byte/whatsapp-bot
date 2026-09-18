@@ -1,28 +1,57 @@
-# سوّها — WhatsApp URL Action Engine
+# سوّها — Clean WhatsApp Cloud API
 
-مساعد واتساب عربي: ترسل رابطًا أو ملفًا وتكتب المطلوب، وهو ينفذ المهمة.
+هذه نسخة نظيفة من «سوّها» تعمل مباشرة مع WhatsApp Cloud API لحساب واحد، بدون Embedded Signup أو OAuth أو تأهيل عملاء.
 
-### MVP
-- تلخيص صفحات الويب
-- ترجمة محتوى الرابط
-- استخراج المعلومات
-- تحليل صفحات المنتجات
-- قراءة PDF وWord
-- تفريغ الصوت/الفيديو للمحتوى المسموح للمستخدم بمعالجته
+## لماذا؟
 
-### التشغيل
-```bash
-npm install
-cp .env.example .env
-npm start
-```
+الهدف الحالي هو تشغيل بوت واتساب لحساب واحد. لذلك لا نستخدم Embedded Signup في هذه المرحلة. Embedded Signup مخصص لمنتجات Solution Partner / Tech Provider التي تقوم بتأهيل حسابات عملاء متعددة.
 
-### Webhook
-- `GET /health`
-- `GET /webhook`
-- `POST /webhook`
+Meta توضح أن Cloud API يحتاج Business Portfolio وWhatsApp Business Account ورقم أعمال، وأن التطبيق يجب الاشتراك فيه على الـWABA حتى تصل أحداث Webhook. كما أن رسالة الاختبار الرسمية تستخدم endpoint الخاص بـPhone Number ID.
 
-### البيئة
-ضع بيانات WhatsApp Cloud API وOpenAI في `.env` أو في مزود الاستضافة.
+## الوظائف
 
-> لا يتجاوز النظام حماية المنصات ولا يهدف إلى تنزيل محتوى محمي دون إذن. استخدمه مع المحتوى الذي تملك حق استخدامه أو الذي تسمح المنصة بمعالجته.
+- استقبال رسائل WhatsApp.
+- تلخيص الروابط.
+- ترجمة الروابط.
+- استخراج المعلومات.
+- تحليل صفحات المنتجات.
+- قراءة PDF وWord.
+- تفريغ الصوت/الفيديو.
+- ردود AI بالعربية.
+
+## متغيرات البيئة
+
+- META_VERIFY_TOKEN: قيمة عشوائية تختارها أنت وتستخدم نفس القيمة في إعداد Webhook داخل Meta.
+- WHATSAPP_TOKEN: System User Access Token.
+- WHATSAPP_PHONE_NUMBER_ID: معرّف رقم الهاتف في WhatsApp Manager.
+- WHATSAPP_GRAPH_VERSION: v26.0.
+- OPENAI_API_KEY: مفتاح OpenAI إذا أردت وظائف AI.
+- OPENAI_MODEL: النموذج النصي.
+- OPENAI_TRANSCRIBE_MODEL: نموذج التفريغ.
+- MAX_DOWNLOAD_MB: الحد الأقصى للملفات التي يعالجها البوت.
+
+لا تضع أي Access Token أو App Secret في GitHub.
+
+## نقاط الاختبار
+
+GET /health — صحة الخدمة وحالة وجود متغيرات البيئة.
+GET /status — يختبر الوصول إلى Phone Number ID عبر Meta دون كشف التوكن.
+GET /webhook — تحقق Meta.
+POST /webhook — استقبال رسائل WhatsApp.
+
+## إعداد Meta
+
+1. افتح تطبيق «سوّها».
+2. فعّل WhatsApp Cloud API.
+3. اضبط Webhook URL على:
+   https://sawha-whatsapp.onrender.com/webhook
+4. استخدم نفس قيمة META_VERIFY_TOKEN.
+5. فعّل Webhooks المطلوبة.
+6. اشترك التطبيق في WABA حتى تصل أحداث أرقام الحساب إلى Webhook.
+7. اختبر رسالة hello_world.
+
+لا تستخدم Embedded Signup الآن.
+
+## الأمان
+
+الرابط الذي يرسله المستخدم يمر عبر فحص أولي لمنع localhost والشبكات الخاصة قبل جلب المحتوى. لا يستخدم المشروع لتجاوز تسجيل الدخول أو حماية المنصات أو تنزيل محتوى محمي دون إذن.
